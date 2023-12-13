@@ -10,7 +10,7 @@
 - 📑 Extraction of titles, authors, and abstracts.
 
 ### Upcoming Milestones
-- [ ] 🛡️ Implement proxies to prevent blocking.
+- [x] 🛡️ Implement proxies to prevent blocking.
 - [ ] 💬 Develop a custom ChatGPT interface for the scraper.
 
 ## Getting Started
