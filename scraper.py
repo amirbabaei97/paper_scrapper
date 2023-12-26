@@ -3,8 +3,6 @@ This module contains a function to search Google Scholar using Selenium and Beau
 It uses mobile emulation and can optionally use a proxy.
 """
 
-
-#TODO: Error handling for the search key
 #TODO: Error handling for the webdriver
 #TODO: Use a better method for the proxy list
 
@@ -56,6 +54,12 @@ def search_scholar(search_key, proxy=None):
     This function searches Google Scholar using Selenium and BeautifulSoup.
     It uses mobile emulation and can optionally use a proxy.
     """
+    # Validate the search key
+    if not search_key:
+        raise ValueError("The search key is empty or invalid.")
+    if not isinstance(search_key, str):
+        raise ValueError("The search key must be a string.")
+    
     # Set up the driver
     mobile_emulation = { "deviceName": "Nexus 5" }
 
