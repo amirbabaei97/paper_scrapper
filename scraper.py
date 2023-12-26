@@ -3,12 +3,13 @@ This module contains a function to search Google Scholar using Selenium and Beau
 It uses mobile emulation and can optionally use a proxy.
 """
 
-#TODO: Error handling for the proxy list for a quick fix
+
 #TODO: Error handling for the search key
 #TODO: Error handling for the webdriver
 #TODO: Use a better method for the proxy list
 
 import json
+import requests
 import time
 import urllib.parse
 import random
@@ -22,6 +23,33 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 
+def test_proxy(proxy):
+    """
+    Test if the proxy is working by attempting to access a website.
+    Returns True if the proxy is working, False otherwise.
+    """
+    try:
+        response = requests.get('http://www.google.com', proxies={"http": proxy, "https": proxy}, timeout=10)
+        return response.status_code == 200
+    except Exception as e:
+        print(f"Failed to connect using proxy {proxy}: {e}")
+        return False
+
+def get_working_proxy(proxies, max_attempts=3):
+    """
+    Tries to find a working proxy from the list, testing each up to max_attempts times.
+    Returns a working proxy or None if none are working after the attempts.
+    """
+    for proxy in proxies:
+        attempt = 0
+        while attempt < max_attempts:
+            if test_proxy(proxy):
+                print(f"Proxy {proxy} is working, using it for the search.")
+                return proxy
+            attempt += 1
+            print(f"Proxy {proxy} failed on attempt {attempt}.")
+    print("No working proxies found after maximum attempts.")
+    return None
 
 def search_scholar(search_key, proxy=None):
     """
@@ -114,7 +142,11 @@ parser = argparse.ArgumentParser(description='Search Google Scholar')
 parser.add_argument('-k', '--keyword', type=str, help='Keyword to search for')
 args = parser.parse_args()
 
-# Then use args.keyword instead of 'deep learning'
-res = search_scholar(args.keyword, random.choice(proxies))
-with open('res.json', 'w', encoding='utf-8') as f:
-    json.dump(list(res), f, indent=4)
+# Before calling search_scholar, check for a working proxy
+working_proxy = get_working_proxy(proxies)
+if working_proxy:
+    res = search_scholar(args.keyword, working_proxy)
+    with open('res.json', 'w', encoding='utf-8') as f:
+        json.dump(list(res), f, indent=4)
+else:
+    print("Error: No working proxies available.")
