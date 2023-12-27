@@ -3,7 +3,7 @@ This module contains a function to search Google Scholar using Selenium and Beau
 It uses mobile emulation and can optionally use a proxy.
 """
 
-#TODO: Error handling for the webdriver
+#TODO: Add API support
 #TODO: Use a better method for the proxy list
 
 import json
@@ -61,17 +61,19 @@ def search_scholar(search_key, proxy=None):
         raise ValueError("The search key must be a string.")
     
     # Set up the driver
-    mobile_emulation = { "deviceName": "Nexus 5" }
-
-    options = Options()
-    options.add_experimental_option("mobileEmulation", mobile_emulation)
-    options.add_argument("--headless") # Ensure GUI is off
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    webdriver_service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(options=options, service=webdriver_service)
-    if proxy:
-        options.add_argument(f'--proxy-server={proxy}')
+    try:
+        mobile_emulation = { "deviceName": "Nexus 5" }
+        options = Options()
+        options.add_experimental_option("mobileEmulation", mobile_emulation)
+        options.add_argument("--headless") # Ensure GUI is off
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        webdriver_service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(options=options, service=webdriver_service)
+        if proxy:
+            options.add_argument(f'--proxy-server={proxy}')
+    except Exception as e:
+        raise Exception(f"Failed to initialize the WebDriver: {e}")
     # open first result in preview mode
     path = 'https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q={}&btnG='
     path = path.format(urllib.parse.quote_plus(search_key))
