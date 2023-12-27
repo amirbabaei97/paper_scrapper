@@ -3,12 +3,17 @@ name: Deploy FastAPI Application
 on:
   push:
     branches:
-      - main  # Set to your default branch
+      - main  
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up Python (latest stable version)
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x' 
+
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -33,5 +38,9 @@ jobs:
           script: |
             cd /var/www/paper_scrapper
             source venv/bin/activate
+            # Upgrade pip to the latest version
+            pip install --upgrade pip
+            # Install requirements
             pip install -r requirements.txt
-            uvicorn main:app --host 0.0.0.0 --port 8000
+            # Start the FastAPI application with Uvicorn
+            uvicorn api:app --host 0.0.0.0 --port 8000
