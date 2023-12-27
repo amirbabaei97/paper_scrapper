@@ -43,4 +43,4 @@ jobs:
             # Install requirements
             pip install -r requirements.txt
             # Start the FastAPI application with Uvicorn
-            uvicorn api:app --host 0.0.0.0 --port 8000
+            uvicorn api:app --host 0.0.0.0 --port 5001
