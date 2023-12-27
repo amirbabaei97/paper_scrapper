@@ -34,5 +34,4 @@ jobs:
             cd /var/www/paper_scrapper
             source venv/bin/activate
             pip install -r requirements.txt
-            # Add any other necessary commands like database migrations
-            sudo systemctl restart paper_scrapper  # Assuming you have a systemd service setup
+            uvicorn main:app --host 0.0.0.0 --port 8000
