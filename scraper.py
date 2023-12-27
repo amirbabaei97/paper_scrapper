@@ -4,6 +4,7 @@ It uses mobile emulation and can optionally use a proxy.
 """
 
 #TODO: Add API support
+#TODO: Implement a caching server
 #TODO: Use a better method for the proxy list
 
 import json
