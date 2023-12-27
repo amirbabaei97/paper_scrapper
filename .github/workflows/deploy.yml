@@ -42,5 +42,8 @@ jobs:
             pip install --upgrade pip
             # Install requirements
             pip install -r requirements.txt
-            # Start the FastAPI application with Uvicorn
-            uvicorn api:app --host 0.0.0.0 --port 5001
+            # Start the FastAPI application with Uvicorn in the background
+            uvicorn api:app --host 0.0.0.0 --port 5001 &
+
+      - name: Wait for deployment to complete
+        run: sleep 10 # Adjust the sleep duration as needed
