@@ -28,6 +28,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.DEPLOY_KEY }}
+          debug: true
           port: 22
           script: |
             cd /var/www/paper_scrapper
