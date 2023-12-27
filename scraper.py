@@ -3,7 +3,6 @@ This module contains a function to search Google Scholar using Selenium and Beau
 It uses mobile emulation and can optionally use a proxy.
 """
 
-#TODO: Add API support
 #TODO: Implement a caching server
 #TODO: Use a better method for the proxy list
 
@@ -13,6 +12,7 @@ import time
 import urllib.parse
 import random
 import argparse
+import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -21,6 +21,18 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
+
+# Load the environment variables
+load_dotenv()
+
+# Handle the proxy stuff
+proxies = []
+
+def init_proxies():
+    global proxies
+    proxy_string = os.getenv('PROXIES', '')  # Default to an empty string if not set
+    proxies = [p.strip() for p in proxy_string.split(',')] if proxy_string else []
 
 def test_proxy(proxy):
     """
@@ -34,11 +46,12 @@ def test_proxy(proxy):
         print(f"Failed to connect using proxy {proxy}: {e}")
         return False
 
-def get_working_proxy(proxies, max_attempts=3):
+def get_working_proxy( max_attempts=3):
     """
     Tries to find a working proxy from the list, testing each up to max_attempts times.
     Returns a working proxy or None if none are working after the attempts.
     """
+    global proxies
     for proxy in proxies:
         attempt = 0
         while attempt < max_attempts:
@@ -69,10 +82,10 @@ def search_scholar(search_key, proxy=None):
         options.add_argument("--headless") # Ensure GUI is off
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
-        webdriver_service = Service(ChromeDriverManager().install())
-        driver = webdriver.Chrome(options=options, service=webdriver_service)
         if proxy:
             options.add_argument(f'--proxy-server={proxy}')
+        webdriver_service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(options=options, service=webdriver_service)
     except Exception as e:
         raise Exception(f"Failed to initialize the WebDriver: {e}")
     # open first result in preview mode
@@ -82,7 +95,7 @@ def search_scholar(search_key, proxy=None):
     time.sleep(1)
     click_for_preview_elements = driver.find_elements(By.XPATH, '//h3[@class="gs_rt"]//a')
     cnt = 0
-    pubs = set()
+    pubs = []
     click_for_preview_elements[0].click()  # Click on the first preview element
 
     while cnt < len(click_for_preview_elements):
@@ -124,7 +137,14 @@ def search_scholar(search_key, proxy=None):
 
                     # Append the formatted data to the list
                     if title and abstract and article_link and authors and citations > 0:
-                        pubs.add((title, abstract, article_link, authors, citations))
+                        pub_data = {
+                            "title": title,
+                            "abstract": abstract,
+                            "article_link": article_link,
+                            "authors": authors,
+                            "citations": citations
+                        }
+                        pubs.append(pub_data)
                 except Exception as e:
                     print(f"Error occurred while extracting publication information: {e}")
 
@@ -138,22 +158,18 @@ def search_scholar(search_key, proxy=None):
 
     return pubs
 
-# Handle the proxy stuff
-# Format: IP:PORT \n IP:PORT \n ...
-proxies = []
-with open('proxy.txt', 'r', encoding="utf-8") as f:
-    proxies = f.readlines()
-proxies = [x.strip() for x in proxies]
+#Uncomment when running without API
 
-parser = argparse.ArgumentParser(description='Search Google Scholar')
-parser.add_argument('-k', '--keyword', type=str, help='Keyword to search for')
-args = parser.parse_args()
+# parser = argparse.ArgumentParser(description='Search Google Scholar')
+# parser.add_argument('-k', '--keyword', type=str, help='Keyword to search for')
+# args = parser.parse_args()
 
-# Before calling search_scholar, check for a working proxy
-working_proxy = get_working_proxy(proxies)
-if working_proxy:
-    res = search_scholar(args.keyword, working_proxy)
-    with open('res.json', 'w', encoding='utf-8') as f:
-        json.dump(list(res), f, indent=4)
-else:
-    print("Error: No working proxies available.")
+# # Before calling search_scholar, check for a working proxy
+# init_proxies()
+# working_proxy = get_working_proxy(proxies)
+# if working_proxy:
+#     res = search_scholar(args.keyword, working_proxy)
+#     with open('res.json', 'w', encoding='utf-8') as f:
+#         json.dump(list(res), f, indent=4)
+# else:
+#     print("Error: No working proxies available.")

@@ -1,8 +1,6 @@
-# Proxy list
-proxy.txt
-
 # Output
 res.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
