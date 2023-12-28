@@ -1,0 +1,11 @@
+pull_request_rules:
+  - name: Automatically merge pull requests with 'automerge' label when CI passes
+    conditions:
+      - "#approved-reviews-by>=1" 
+      - status-success=CI  
+      - label=automerge
+      - base=main  
+      - "conflict" 
+    actions:
+      merge:
+        method: merge  
