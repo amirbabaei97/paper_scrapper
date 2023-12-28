@@ -1,4 +1,4 @@
-name: Development Build, Test, and Merge
+name: Development Build, Test, and Debug
 
 on:
   push:
@@ -7,40 +7,57 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write  # Grants permission to create pull requests
+  pull-requests: write
 
 jobs:
-  build-test-and-merge:
+  build-test-and-debug:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4  # Using the latest version of actions/checkout
-
-      - name: Set up Python 3.x
-        uses: actions/setup-python@v2
+      - name: Checkout development branch
+        uses: actions/checkout@v2
         with:
-          python-version: '3.x'
+          ref: development
 
-      - name: Install dependencies
+      - name: Set up Git
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
 
-      - name: Run tests
+      - name: Log Git Status and Branches
         run: |
-          # Replace with your actual test command, e.g., pytest
-          echo "Running tests!"
+          echo "Current branch:"
+          git branch -avv
+          echo "Remote branches:"
+          git branch -r
+          echo "Last 3 commits on development:"
+          git log -3
 
-      # Make any changes here that the pull request should include
+      - name: Compare with Main
+        run: |
+          git fetch origin main:main
+          echo "Comparing development with main..."
+          git diff --name-status development..main
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Automated changes by build and test workflow"
-          title: "Automated PR: Merging Development changes into Main"
-          body: |
-            This is an automated pull request to merge changes from the development branch into the main branch.
-          branch: "auto-merge-to-main-${{ github.run_number }}"
-          base: "main"
-          labels: "automerge"
+      - name: Checkout Main and Log
+        run: |
+          git checkout main
+          echo "Last 3 commits on main:"
+          git log -3
+
+      - name: Create Debug Branch from Main
+        run: |
+          git checkout -b debug-branch-${{ github.run_id }} main
+          echo "Debug branch created from main"
+
+      - name: Merge Development into Debug Branch and Log
+        run: |
+          git merge development --no-commit --no-ff
+          echo "Changes to be merged from development to debug branch:"
+          git diff --name-status --cached
+
+      - name: Final Repository Status
+        run: |
+          echo "Final Git Status:"
+          git status
+          echo "All local branches:"
+          git branch -avv
