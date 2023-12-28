@@ -36,9 +36,10 @@ jobs:
           git status
           git log -2
       - name: Fetch all branches
-          run: git fetch --all
-          run: git checkout main
-          run: git branch -a
+        run: |
+          git fetch --all
+          git checkout main
+          git branch -a
           
 
       - name: Show recent commits on development
