@@ -136,6 +136,9 @@ def search_scholar(search_key, proxy=None):
                             if li.text.startswith("Cited by"):
                                 citations = int(li.text.split(" ")[2])
                                 break
+                    # Extract the publication year
+                    year_element = soup.find(class_="gs_qabs_pub")
+                    year = year_element.get_text(strip=True).split(",")[-1] if year_element else None
 
                     # Append the formatted data to the list
                     if title and abstract and article_link and authors and citations > 0:
@@ -144,7 +147,8 @@ def search_scholar(search_key, proxy=None):
                             "abstract": abstract,
                             "article_link": article_link,
                             "authors": authors,
-                            "citations": citations
+                            "citations": citations,
+                            "year": year
                         }
                         pubs.append(pub_data)
                 except Exception as e:
