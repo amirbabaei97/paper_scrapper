@@ -6,6 +6,7 @@ on:
       - development
 
 permissions:
+  contents: write
   pull-requests: write  # Grants permission to create pull requests
 
 jobs:
@@ -13,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4  # Using the latest version of actions/checkout
 
       - name: Set up Python 3.x
         uses: actions/setup-python@v2
@@ -29,18 +30,17 @@ jobs:
         run: |
           # Replace with your actual test command, e.g., pytest
           echo "Running tests!"
-      
-      - name: Setup GitHub CLI
-        run: |
-          sudo apt update && sudo apt install -y gh  # Installs the GitHub CLI
 
-      - name: Authenticate GitHub CLI
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Uses the built-in GITHUB_TOKEN for authentication
-        run: |
-          gh auth setup-git  # Configures git to use 'gh' as a credential helper
+      # Make any changes here that the pull request should include
 
-      - name: Create or Update Pull Request
-        run: |
-          gh_pr_up() { gh pr create $* || gh pr edit $* }  # Defines a function to create or update a PR
-          gh_pr_up --title "My pull request" --body "Description"  # Uses the function to create/update a PR
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Automated changes by build and test workflow"
+          title: "Automated PR: Merging Development changes into Main"
+          body: |
+            This is an automated pull request to merge changes from the development branch into the main branch.
+          branch: "auto-merge-to-main-${{ github.run_number }}"
+          base: "main"
+          labels: "automerge"
