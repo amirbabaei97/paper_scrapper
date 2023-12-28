@@ -52,14 +52,16 @@ def get_working_proxy():
     Returns a working proxy or None if none are working after the attempts.
     """
     global proxies
-    for proxy in proxies:
-        attempt = 0
-        while attempt < 3:
-            if test_proxy(proxy):
-                print(f"Proxy {proxy} is working, using it for the search.")
-                return proxy
-            attempt += 1
-            print(f"Proxy {proxy} failed on attempt {attempt}.")
+    random.shuffle(proxies)
+    #Try 5 proxies for 3 times each, if none work, return None
+    attempts = 5
+    while attempts > 0:
+        proxy = proxies.pop()
+        if test_proxy(proxy):
+            print(f"Proxy {proxy} is working, using it for the search.")
+            return proxy
+        attempts -= 1
+        print(f"Proxy {proxy} failed, Attempt: {5 - attempts}.")
     print("No working proxies found after maximum attempts.")
     return None
 
