@@ -6,7 +6,31 @@ on:
       - main  
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python (latest stable version)
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x' 
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          # Add your commands to execute tests here
+          # Example:
+          # pytest tests/
+          echo "done!"
+
   deploy:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Set up Python (latest stable version)
@@ -43,21 +67,11 @@ jobs:
           script: |
             cd /var/www/paper_scrapper
             source venv/bin/activate
-            # Upgrade pip to the latest version
             pip install --upgrade pip
-            # Install requirements
             pip install -r requirements.txt
-            # Start the FastAPI application with Uvicorn in the background
-            # Stop the service if it's already running
             sudo systemctl stop paper_scrapper.service
-
-            # Enable the service to start on boot
             sudo systemctl enable paper_scrapper.service
-
-            # Start the new service
             sudo systemctl start paper_scrapper.service
-
-            # Check the status of the service
             sudo systemctl status paper_scrapper.service
 
       - name: Wait for deployment to complete
