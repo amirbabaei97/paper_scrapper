@@ -26,6 +26,11 @@ jobs:
           port: 22
           source: "."
           target: "/var/www/paper_scrapper"
+      
+      - name: Set environment variables
+        env:
+          API_KEY: ${{ secrets.PROXIES }}
+        run: echo "PROXIES=${PROXIES}" >> .env
 
       - name: Execute deployment script
         uses: appleboy/ssh-action@master
@@ -43,7 +48,17 @@ jobs:
             # Install requirements
             pip install -r requirements.txt
             # Start the FastAPI application with Uvicorn in the background
-            uvicorn api:app --host 0.0.0.0 --port 5001 &
+            # Stop the service if it's already running
+            sudo systemctl stop uvicorn.service
+
+            # Enable the service to start on boot
+            sudo systemctl enable uvicorn.service
+
+            # Start the new service
+            sudo systemctl start uvicorn.service
+
+            # Check the status of the service
+            sudo systemctl status uvicorn.service
 
       - name: Wait for deployment to complete
-        run: sleep 10 # Adjust the sleep duration as needed
+        run: sleep 10
