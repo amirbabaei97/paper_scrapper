@@ -1,0 +1,40 @@
+name: Development Build, Test, and Merge
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  build-test-and-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          # Replace with your actual test command, e.g., pytest
+          echo "Running tests!"
+
+      - name: Auto-merge to main if tests pass
+        if: ${{ success() }}
+        uses: peter-evans/create-pull-request@v3
+        with:
+          branch: merge-to-main-${{ github.head_ref }}
+          commit-message: Merge development into main
+          title: '[AUTO-MERGE] Merge from Development to Main'
+          body: |
+            This is an automated pull request to update from branch development to main.
+          base: main
+          labels: automerge
