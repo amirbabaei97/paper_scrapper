@@ -138,7 +138,7 @@ def search_scholar(search_key, proxy=None):
                                 break
                     # Extract the publication year
                     year_element = soup.find(class_="gs_qabs_pub")
-                    year = year_element.get_text(strip=True).split(",")[-1] if year_element else None
+                    year = int(year_element.get_text(strip=True).split(",")[-1].strip()) if year_element else None
 
                     # Append the formatted data to the list
                     if title and abstract and article_link and authors and citations > 0:
