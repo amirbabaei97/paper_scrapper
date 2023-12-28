@@ -26,44 +26,16 @@ jobs:
         run: |
           # Replace with your actual test command, e.g., pytest
           echo "Running tests!"
-   
-      - name: Debug information
-        run: |
-          echo "GitHub Ref: ${{ github.ref_name }}"
-          echo "GitHub Ref: ${{ github.ref }}"
-          echo "GitHub Event Name: ${{ github.event_name }}"
-          echo "GitHub Repository: ${{ github.repository }}"
-          git status
-          git log -2
-      - name: Fetch all branches
-        run: |
-          git fetch --all
-          git checkout main
-          git branch -a
-          
-
-      - name: Show recent commits on development
-        run: |
-          git checkout development
-          git log -5 --oneline
       
-      - name: Show recent commits on main
-        run: |
-          git checkout main
-          git log -5 --oneline
-      
-      - name: Compare branches
-        run: |
-          git checkout main
-          git diff --name-status development..main
       - name: Auto-merge to main if tests pass
         if: ${{ success() }}
         uses: peter-evans/create-pull-request@v3
         with:
-          branch: merge-to-main-${{ github.ref_name }}
+          token: ${{ secrets.MY_PERSONAL_TOKEN }}
+          branch: update-from-development-${{ github.run_id }}  # Unique branch for the PR
           commit-message: Merge development into main
           title: '[AUTO-MERGE] Merge from Development to Main'
           body: |
             This is an automated pull request to update from branch development to main.
-          base: main
+          base: main  # The target branch for the PR
           labels: automerge
