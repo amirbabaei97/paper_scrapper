@@ -27,6 +27,11 @@ jobs:
           # Replace with your actual test command, e.g., pytest
           echo "Running tests!"
       
+      - name: Checkout development branch
+        uses: actions/checkout@v2
+        with:
+          ref: 'development'
+      
       - name: Auto-merge to main if tests pass
         if: ${{ success() }}
         uses: peter-evans/create-pull-request@v3
