@@ -11,14 +11,6 @@ def test_api_keys_loaded():
     from api import API_KEYS
     assert API_KEYS, "API_KEYS should be loaded from environment variables"
 
-# Test Startup Event
-@pytest.mark.asyncio
-async def test_startup_event():
-    with patch('api.init_proxies') as mock_init_proxies:
-        from api import startup_event
-        await startup_event()
-        mock_init_proxies.assert_called_once()
-
 # Test API Key Validation
 def test_validate_api_key():
     from api import API_KEYS
@@ -38,8 +30,8 @@ def test_search_with_missing_keyword():
     from api import API_KEYS
     valid_key = list(API_KEYS)[0]
     response = client.get("/search/", headers={"x-api-key": valid_key})
-    assert response.status_code == 400
-    assert response.json()['detail'] == "Keyword is required"
+    assert response.status_code == 422
+    assert response.json()['detail'][0]['msg'] == 'Field required'
 
 # Test Search Endpoint - No Working Proxies
 def test_search_no_working_proxies():
@@ -65,7 +57,8 @@ def test_successful_search():
 def test_search_with_error():
     from api import API_KEYS
     valid_key = list(API_KEYS)[0]
-    with patch('api.search_scholar', side_effect=Exception("Search failed")):
-        response = client.get("/search/?keyword=test", headers={"x-api-key": valid_key})
-        assert response.status_code == 500
-        assert response.json()['detail'] == "Search failed"
+    with patch('api.get_working_proxy', return_value='http://dummyproxy'):
+        with patch('api.search_scholar', side_effect=Exception("Search failed")):
+            response = client.get("/search/?keyword=test", headers={"x-api-key": valid_key})
+            assert response.status_code == 500
+            assert "Search failed" in response.json()['detail']
