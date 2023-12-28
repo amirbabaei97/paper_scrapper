@@ -24,10 +24,9 @@ jobs:
 
       - name: Run tests
         run: |
-          # Add your commands to execute tests here
-          # Example:
-          pytest tests/test_api.py
-          pytest tests/test_api.py
+          export PYTHONPATH=$PWD
+          pytest tests/
+        
 
 
   deploy:
