@@ -46,7 +46,7 @@ def test_proxy(proxy):
         print(f"Failed to connect using proxy {proxy}: {e}")
         return False
 
-def get_working_proxy( max_attempts=3):
+def get_working_proxy():
     """
     Tries to find a working proxy from the list, testing each up to max_attempts times.
     Returns a working proxy or None if none are working after the attempts.
@@ -54,7 +54,7 @@ def get_working_proxy( max_attempts=3):
     global proxies
     for proxy in proxies:
         attempt = 0
-        while attempt < max_attempts:
+        while attempt < 3:
             if test_proxy(proxy):
                 print(f"Proxy {proxy} is working, using it for the search.")
                 return proxy

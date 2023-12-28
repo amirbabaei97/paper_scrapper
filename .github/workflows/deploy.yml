@@ -27,10 +27,10 @@ jobs:
           source: "."
           target: "/var/www/paper_scrapper"
       
-      - name: Set environment variables
-        env:
-          PROXIES: ${{ secrets.PROXIES }}
-        run: echo "PROXIES=${PROXIES}" >> .env
+      # - name: Set environment variables
+      #   env:
+      #     PROXIES: ${{ secrets.PROXIES }}
+      #   run: echo "PROXIES=${PROXIES}" > .env
 
       - name: Execute deployment script
         uses: appleboy/ssh-action@master
