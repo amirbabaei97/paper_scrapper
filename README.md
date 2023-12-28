@@ -11,7 +11,8 @@
 
 ### Upcoming Milestones
 - [x] 🛡️ Implement proxies to prevent blocking.
-- [ ] 💬 Develop a custom ChatGPT interface for the scraper.
+- [x] 💬 Implementing API for easier handeling
+- [x] 💬 Develop a custom ChatGPT interface for the scraper.
 
 ## Getting Started
 ### Prerequisites
