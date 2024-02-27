@@ -13,7 +13,7 @@
 - [x] 🛡️ Implement proxies to prevent blocking.
 - [x] 💬 Implementing API for easier handling
 - [x] 💬 Develop a custom ChatGPT interface for the scraper.
-- [ ] 📄 Implement a scoring function to rank the papers based
+- [ ] 📄 Implement a scoring function to rank the papers. 
 
 ## Getting Started
 ### Prerequisites
