@@ -13,12 +13,12 @@ Let's denote the variables as follows:
 
 And the weights:
 
-- \( w_{CC} = 0.2 \)
-- \( w_{JIF} = 0.2 \)
-- \( w_{AS} = 0.2 \)
-- \( w_{PY} = -0.05 \)
-- \( w_{CPM} = 0.2 \)
-- \( w_{PRS} = 0.2 \)
+- $w_{CC} = 0.2$
+- $w_{JIF} = 0.2$
+- $w_{AS} = 0.2$
+- $w_{PY} = -0.05$
+- $w_{CPM} = 0.2$
+- $w_{PRS} = 0.2$
 
 You can see all of them in a tabular view:
 
@@ -31,9 +31,9 @@ You can see all of them in a tabular view:
 | Cross-Platform Mentions (CPM) | 1 - 3                      | 0.2             |
 | Peer Review Status (PRS)      | 0 or 1                     | 0.2             |
 
-The formula to calculate the score for each paper, \( S \), would be:
+The formula to calculate the score for each paper, $S$, would be:
 
-<img src="https://latex.codecogs.com/svg.latex?\Large&space;S=w_{CC}\cdot\left(\frac{CC-1}{8}\right)+w_{JIF}\cdot\left(\frac{JIF}{3}\right)+w_{AS}\cdot\left(\frac{AS}{100}\right)+w_{PY}\cdot\left(1-\frac{CY-PY}{40}\right)+w_{CPM}\cdot\left(\frac{CPM-1}{2}\right)+w_{PRS}\cdot\left(PRS\right)" title="Scoring Formula" />
+$$S=w_{CC}\cdot\left(\frac{CC-1}{8}\right)+w_{JIF}\cdot\left(\frac{JIF}{3}\right)+w_{AS}\cdot\left(\frac{AS}{100}\right)+w_{PY}\cdot\left(1-\frac{CY-PY}{40}\right)+w_{CPM}\cdot\left(\frac{CPM-1}{2}\right)+w_{PRS}\cdot\left(PRS\right)$$
 
 
 ### Explanation
