@@ -6,7 +6,8 @@ Let's denote the variables as follows:
 - \( CC \) = Citations Count (scaled between 1 and 9)
 - \( JIF \) = Journal Impact Factor (scaled between 0 and 3)
 - \( AS \) = Author's Score (as is, assuming it's already a composite score that can be directly used)
-- \( PY \) = Publication Year (with the current year considered to make newer publications score higher)
+- \( PY \) = Publication Year (considered to make newer publications score higher)
+- \( CY \) = Current Year
 - \( CPM \) = Cross-Platform Mentions (scaled between 1 and 3)
 - \( PRS \) = Peer Review Status (0 or 1)
 
@@ -32,12 +33,8 @@ You can see all of them in a tabular view:
 
 The formula to calculate the score for each paper, \( S \), would be:
 
-\[ S = w_{CC} \cdot \left(rac{CC - 1}{8}
-ight) + w_{JIF} \cdot \left(rac{JIF}{3}
-ight) + w_{AS} \cdot \left(rac{AS}{100}
-ight) + w_{PY} \cdot \left(1 - rac{CurrentYear - PY}{40}
-ight) + w_{CPM} \cdot \left(rac{CPM - 1}{2}
-ight) + w_{PRS} \cdot PRS \]
+<img src="https://latex.codecogs.com/svg.latex?\Large&space;S=w_{CC}\cdot\left(\frac{CC-1}{8}\right)+w_{JIF}\cdot\left(\frac{JIF}{3}\right)+w_{AS}\cdot\left(\frac{AS}{100}\right)+w_{PY}\cdot\left(1-\frac{CY-PY}{40}\right)+w_{CPM}\cdot\left(\frac{CPM-1}{2}\right)+w_{PRS}\cdot\left(PRS\right)" title="Scoring Formula" />
+
 
 ### Explanation
 We tried to assign a weight to each of the variables based on the the disturibution patterns of the variables. Thus these values might need improvement, please create an issue and suggest better weights or update a common range of a variable.(A good source is usually required.) You don't have to necessarily update the code. 
