@@ -1,3 +1,6 @@
+#Ignoring chromium deb 
+*.deb
+
 # Output ignoring
 res.json
 
