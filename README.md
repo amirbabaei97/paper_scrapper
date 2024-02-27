@@ -23,8 +23,8 @@
 ### Installation
 ```bash
 # Instructions to install your tool
-git clone [https://github.com/amirbabaei97/paper_scrapper]
-cd [paper_scrapper]
+git clone https://github.com/amirbabaei97/paper_scrapper
+cd paper_scrapper
 pip install -r requirements.txt
 ```
 
@@ -51,13 +51,11 @@ _Output format: Results are presented in a structured JSON format._
 
 ## Contributing
 🤝 _We welcome contributions!_
-- See [CONTRIBUTING.md](#) for how to submit patches and requests.
+- Please do a fork and then send a PR with the explanations of the changes. 
 - For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
 📄 _This project is licensed under the [GNU General Public License](https://www.gnu.org/licenses/gpl-3.0.en.html)._
 
 ## Acknowledgments
-- Hat tip to anyone whose code was used
-- Inspiration
-- etc
+- Hat tip to ChatGPT for helping in the development process
