@@ -11,20 +11,20 @@
 
 ### Upcoming Milestones
 - [x] 🛡️ Implement proxies to prevent blocking.
-- [x] 💬 Implementing API for easier handeling
+- [x] 💬 Implementing API for easier handling
 - [x] 💬 Develop a custom ChatGPT interface for the scraper.
+- [ ] 📄 Implement a scoring function to rank the papers based
 
 ## Getting Started
 ### Prerequisites
-- List any libraries or tools that need to be installed, for example:
   - Python 3.x
   - BeautifulSoup
 
 ### Installation
 ```bash
 # Instructions to install your tool
-git clone [your-repository-url]
-cd [repository-name]
+git clone [https://github.com/amirbabaei97/paper_scrapper]
+cd [paper_scrapper]
 pip install -r requirements.txt
 ```
 
