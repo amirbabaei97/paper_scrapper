@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI, HTTPException, Request
-from scraper import search_scholar, get_working_proxy, init_proxies
+from scraper import search_papers, get_working_proxy, init_proxies
 from dotenv import load_dotenv
 
 app = FastAPI()
@@ -36,7 +36,7 @@ async def search(request: Request, keyword: str):
         raise HTTPException(status_code=500, detail="No working proxies available.")
     
     try:
-        results = search_scholar(keyword, working_proxy)
+        results = search_papers(keyword, working_proxy)
         return results
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

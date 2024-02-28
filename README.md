@@ -2,7 +2,7 @@
 # Scholarly Paper Scraper
 
 ## Introduction
-🔍 _A simple, quick tool to search for keywords in Google Scholar and retrieve relevant academic information, including titles, authors, and abstracts._
+🔍 _A simple, quick tool to search for keywords in various scholar search engines and retrieve relevant academic information, including titles, authors, and abstracts. The tool then ranks each source using the predefined scoring function which could be optimized by the user._
 
 ## Features
 ### Current Features
@@ -13,7 +13,7 @@
 - [x] 🛡️ Implement proxies to prevent blocking.
 - [x] 💬 Implementing API for easier handling
 - [x] 💬 Develop a custom ChatGPT interface for the scraper.
-- [ ] 📄 Implement a scoring function to rank the papers. 
+- [x] 📄 Implement a scoring function to rank the papers. 
 
 ## Getting Started
 ### Prerequisites
@@ -41,7 +41,7 @@ _Output format: Results are presented in a structured JSON format._
 - [ ] Integration with additional scientific paper search engines:
   - [x] Google Scholar 
   - [ ] Arxiv
-  - [ ] Semantic Scholar
+  - [x] Semantic Scholar
   - [ ] Open Review
   - [ ] Science.gov
   - [ ] core.ac.uk
@@ -59,3 +59,5 @@ _Output format: Results are presented in a structured JSON format._
 
 ## Acknowledgments
 - Hat tip to ChatGPT for helping in the development process
+- Thank you to arXiv for use of its open access interoperability.
+- Thank you Semantic Scholar for providing a free API key for this project.

@@ -21,6 +21,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
+from semanticscholar import SemanticScholar
 from dotenv import load_dotenv
 
 # Load the environment variables
@@ -28,6 +29,36 @@ load_dotenv()
 
 # Handle the proxy stuff
 proxies = []
+
+def search_semantic_scholar(search_query):
+    '''Function to search for a paper using the Semantic Scholar API, this will result the standard pub_data'''
+    # Read API key from .env file
+    s2_api_key = os.getenv('S2_API_KEY')
+
+    # Initialize the Semantic Scholar object with the API key
+    sch = SemanticScholar(api_key=s2_api_key)
+
+    # Search for papers using the Semantic Scholar API
+    result = sch.search_paper(search_query)
+    
+    # Initialize an empty list to hold publication data
+    pubs = []
+
+    # Extract up to 10 papers from the search result
+    for paper in result[:10]:
+        authors = [author['name'] for author in paper['authors']]
+        pub_data = {
+            "title": paper['title'],
+            "abstract": paper['abstract'],
+            "article_link": paper['url'],
+            "authors": authors,
+            "citations": paper['citationCount'],
+            "year": paper['year']
+        }
+        
+        pubs.append(pub_data)
+    
+    return pubs
 
 def init_proxies():
     global proxies
@@ -65,7 +96,7 @@ def get_working_proxy():
     print("No working proxies found after maximum attempts.")
     return None
 
-def search_scholar(search_key, proxy=None):
+def search_google_scholar(search_key, proxy=None):
     """
     This function searches Google Scholar using Selenium and BeautifulSoup.
     It uses mobile emulation and can optionally use a proxy.
@@ -164,17 +195,65 @@ def search_scholar(search_key, proxy=None):
 
     return pubs
 
+def calculate_score(pub_data, current_year=2024, prs=1):
+    w_CC = 0.2  # Weight for Citations Count
+    w_PY = -0.05  # Weight for Publication Year, adjusted as per requirement
+
+    CC_scaled = (pub_data["citations"] - 1) / 8
+    PY_score = 1 - (current_year - pub_data["year"]) / 40
+    CPM_score = (pub_data["cpm"])
+
+    score = (w_CC * CC_scaled) + (w_PY * PY_score) + (0.2 * prs) + (0.2 * CPM_score)
+    return score
+
+def calculate_cpm(title1, title2):
+    words1 = set(title1.lower().split())
+    words2 = set(title2.lower().split())
+    common_words = words1.intersection(words2)
+    if len(common_words) / max(len(words1), len(words2)) > 0.5:
+        return 1  # Titles are considered the same
+    return 0  # Titles are different
+
+def search_papers(search_query, proxy=None):
+    # Perform the searches
+    pubs_semantic = search_semantic_scholar(search_query)
+    pubs_google = search_google_scholar(search_query, proxy)
+    
+    # Combine results and calculate scores
+    all_pubs = pubs_semantic + pubs_google
+    for pub in all_pubs:
+        # Initially, assume CPM = 1 for all. This will be adjusted based on title comparison.
+        pub['cpm'] = 1  # Default value before comparison
+
+    # Adjust CPM based on cross-platform mentions
+    for i, pub1 in enumerate(all_pubs):
+        for pub2 in all_pubs[i+1:]:
+            cpm = calculate_cpm(pub1["title"], pub2["title"])
+            pub1['cpm'] = pub2['cpm'] = max(pub1['cpm'], cpm)  # Update if a match is found
+
+    # Calculate scores
+    for pub in all_pubs:
+        pub['score'] = calculate_score(pub)
+        del pub['cpm']
+        
+
+
+    # Sort publications by score
+    ranked_pubs = sorted(all_pubs, key=lambda x: x['score'], reverse=True)
+
+    return ranked_pubs
+
 #Uncomment when running without API
 
 # parser = argparse.ArgumentParser(description='Search Google Scholar')
 # parser.add_argument('-k', '--keyword', type=str, help='Keyword to search for')
 # args = parser.parse_args()
 
-# # Before calling search_scholar, check for a working proxy
+# # Before calling search_google_scholar, check for a working proxy
 # init_proxies()
 # working_proxy = get_working_proxy(proxies)
 # if working_proxy:
-#     res = search_scholar(args.keyword, working_proxy)
+#     res = search_google_scholar(args.keyword, working_proxy)
 #     with open('res.json', 'w', encoding='utf-8') as f:
 #         json.dump(list(res), f, indent=4)
 # else:
