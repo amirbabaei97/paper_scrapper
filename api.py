@@ -40,3 +40,9 @@ async def search(request: Request, keyword: str):
         return results
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+#show the privacy.txt in the root of the project
+@app.get("/privacy")
+async def privacy():
+    with open("privacy.txt", "r") as file:
+        return file.read()

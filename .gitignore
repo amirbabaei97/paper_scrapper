@@ -1,5 +1,6 @@
-#Ignoring chromium deb 
+#Ignore all the service related files
 *.deb
+privacy.txt
 
 # Output ignoring
 res.json
