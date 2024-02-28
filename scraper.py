@@ -13,6 +13,7 @@ import urllib.parse
 import random
 import argparse
 import os
+import xml.etree.ElementTree as ET
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -29,6 +30,38 @@ load_dotenv()
 
 # Handle the proxy stuff
 proxies = []
+def search_arxiv(search_query):
+    '''Function to search for a paper using the arXiv API, this will result in the standard pub_data'''
+    # Make the API request
+    response = requests.get(f"http://export.arxiv.org/api/query?search_query=all:{search_query}&start=0&max_results=10")
+    
+    # Parse the XML response
+    root = ET.fromstring(response.content)
+    
+    # Namespace required to find elements
+    ns = {'default': 'http://www.w3.org/2005/Atom'}
+    
+    # Initialize an empty list to hold publication data
+    pubs = []
+    
+    # Iterate through each entry/paper in the response
+    for entry in root.findall('default:entry', ns):
+        # Extracting multiple authors
+        authors = [author.find('default:name', ns).text for author in entry.findall('default:author', ns)]
+        
+        # Construct the publication data dictionary
+        pub_data = {
+            "title": entry.find('default:title', ns).text.strip(),
+            "abstract": entry.find('default:summary', ns).text.strip(),
+            "article_link": entry.find('default:link[@rel="alternate"]', ns).attrib['href'],
+            "authors": authors,
+            "year": entry.find('default:published', ns).text[:4]  # Extracting year from the published date
+        }
+        
+        # Append the publication data to the pubs list
+        pubs.append(pub_data)
+
+    return pubs
 
 def search_semantic_scholar(search_query):
     '''Function to search for a paper using the Semantic Scholar API, this will result the standard pub_data'''
@@ -218,9 +251,10 @@ def search_papers(search_query, proxy=None):
     # Perform the searches
     pubs_semantic = search_semantic_scholar(search_query)
     pubs_google = search_google_scholar(search_query, proxy)
+    pubs_arxiv = search_arxiv(search_query)
     
     # Combine results and calculate scores
-    all_pubs = pubs_semantic + pubs_google
+    all_pubs = pubs_semantic + pubs_google + pubs_arxiv
     for pub in all_pubs:
         # Initially, assume CPM = 1 for all. This will be adjusted based on title comparison.
         pub['cpm'] = 1  # Default value before comparison

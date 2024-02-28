@@ -40,7 +40,7 @@ _Output format: Results are presented in a structured JSON format._
 🚧 _Future enhancements:_
 - [ ] Integration with additional scientific paper search engines:
   - [x] Google Scholar 
-  - [ ] Arxiv
+  - [x] Arxiv
   - [x] Semantic Scholar
   - [ ] Open Review
   - [ ] Science.gov
