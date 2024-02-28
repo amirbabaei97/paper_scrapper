@@ -1,7 +1,7 @@
 import os
 from unittest.mock import patch, MagicMock
 import pytest
-from scraper import init_proxies, test_proxy as original_test_proxy, get_working_proxy, search_scholar, proxies
+from scraper import init_proxies, test_proxy as original_test_proxy, get_working_proxy, search_google_scholar, proxies
 
 def test_init_proxies():
     init_proxies()
@@ -9,19 +9,19 @@ def test_init_proxies():
     assert len(proxies) == 100, "Proxies should be correctly parsed and loaded from the environment"
 
 @patch('selenium.webdriver.Chrome')
-def test_search_scholar_with_invalid_key(mock_driver):
+def test_search_google_scholar_with_invalid_key(mock_driver):
     with pytest.raises(ValueError):
-        search_scholar("", None)
+        search_google_scholar("", None)
 
 import pytest
-from scraper import search_scholar
+from scraper import search_google_scholar
 
-def test_search_scholar():
+def test_search_google_scholar():
     # Define a test search key. Choose a common term to ensure results.
     test_search_key = "machine learning"
     
-    # Call the search_scholar function with the test search key
-    results = search_scholar(test_search_key)
+    # Call the search_google_scholar function with the test search key
+    results = search_google_scholar(test_search_key)
 
     # Check if the results are in the expected format and contain expected fields
     for result in results:
