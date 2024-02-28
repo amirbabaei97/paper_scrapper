@@ -16,7 +16,7 @@ And the weights:
 - $w_{CC} = 0.2$
 - $w_{JIF} = 0.2$
 - $w_{AS} = 0.2$
-- $w_{PY} = -0.05$
+- $w_{PY} = 0.05$
 - $w_{CPM} = 0.2$
 - $w_{PRS} = 0.2$
 
@@ -27,7 +27,7 @@ You can see all of them in a tabular view:
 | Citations Count (CC)          | 1 - 9                      | 0.2             |
 | Journal Impact Factor (JIF)   | 0 - 3                      | 0.2             |
 | Author's Score (AS)           | 0 - 100+ (composite score) | 0.2             |
-| Publication Year (PY)         | 0 - 40                     | \-0.05          |
+| Publication Year (PY)         | 0 - 40                     | 0.05            |
 | Cross-Platform Mentions (CPM) | 1 - 3                      | 0.2             |
 | Peer Review Status (PRS)      | 0 or 1                     | 0.2             |
 

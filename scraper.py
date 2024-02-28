@@ -197,7 +197,7 @@ def search_google_scholar(search_key, proxy=None):
 
 def calculate_score(pub_data, current_year=2024, prs=1):
     w_CC = 0.2  # Weight for Citations Count
-    w_PY = -0.05  # Weight for Publication Year, adjusted as per requirement
+    w_PY = 0.05  # Weight for Publication Year, adjusted as per requirement
 
     CC_scaled = (pub_data["citations"] - 1) / 8
     PY_score = 1 - (current_year - pub_data["year"]) / 40
