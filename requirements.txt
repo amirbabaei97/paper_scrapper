@@ -7,3 +7,4 @@ selenium==4.16.0
 webdriver_manager==4.0.1
 uvicorn==0.25.0
 httpx==0.26.0
+semanticscholar==0.7.0
