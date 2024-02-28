@@ -48,7 +48,7 @@ def test_successful_search():
     valid_key = list(API_KEYS)[0]
     sample_results = [{"title": "Sample Title", "link": "http://example.com"}]
     with patch('api.get_working_proxy', return_value='http://proxyserver:port'):
-        with patch('api.search_scholar', return_value=sample_results):
+        with patch('api.search_papers', return_value=sample_results):
             response = client.get("/search/?keyword=test", headers={"x-api-key": valid_key})
             assert response.status_code == 200
             assert response.json() == sample_results
@@ -58,7 +58,7 @@ def test_search_with_error():
     from api import API_KEYS
     valid_key = list(API_KEYS)[0]
     with patch('api.get_working_proxy', return_value='http://dummyproxy'):
-        with patch('api.search_scholar', side_effect=Exception("Search failed")):
+        with patch('api.search_papers', side_effect=Exception("Search failed")):
             response = client.get("/search/?keyword=test", headers={"x-api-key": valid_key})
             assert response.status_code == 500
             assert "Search failed" in response.json()['detail']
