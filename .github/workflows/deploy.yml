@@ -26,6 +26,7 @@ jobs:
         run: |
           echo "PROXIES=${{ secrets.PROXIES }}" > .env
           echo "API_KEYS=${{ secrets.API_KEYS }}" >> .env
+          echo "S2_API_KEY=${{ secrets.S2_API_KEY }}" >> .env
 
       - name: Run tests
         run: |
@@ -59,7 +60,7 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           port: 22
           source: "."
-          target: "/var/www/paper_scrapper"
+          target: "/home/paper_scrapper"
 
       - name: Execute deployment script
         uses: appleboy/ssh-action@master
@@ -70,7 +71,7 @@ jobs:
           debug: true
           port: 22
           script: |
-            cd /var/www/paper_scrapper
+            cd /home/paper_scrapper
             source venv/bin/activate
             pip install --upgrade pip
             pip install -r requirements.txt
