@@ -61,7 +61,7 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           port: 22
           source: "."
-          target: "/home/paper_scrapper"
+          target: "/home/github/paper_scrapper"
 
       - name: Execute deployment script
         uses: appleboy/ssh-action@master
@@ -72,7 +72,7 @@ jobs:
           debug: true
           port: 22
           script: |
-            cd /home/paper_scrapper
+            cd /home/github/paper_scrapper
             source venv/bin/activate
             pip install --upgrade pip
             pip install -r requirements.txt
