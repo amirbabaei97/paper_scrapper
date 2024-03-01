@@ -55,7 +55,8 @@ def search_arxiv(search_query):
             "abstract": entry.find('default:summary', ns).text.strip(),
             "article_link": entry.find('default:link[@rel="alternate"]', ns).attrib['href'],
             "authors": authors,
-            "year": entry.find('default:published', ns).text[:4]  # Extracting year from the published date
+            "year": int(entry.find('default:published', ns).text[:4]),  # Extracting year from the published date
+            "citations": 0
         }
         
         # Append the publication data to the pubs list
